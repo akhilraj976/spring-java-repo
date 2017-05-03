@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/stream http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http-4.3.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+	<int:gateway service-interface="com.akhil.component.SimpleGateway" default-request-channel="httpOutbound"/>
+	
+	<int:channel id="httpChannel"/>
+	
+	<int:channel id="httpOutbound"/>
+	
+	<int:channel id="httpReply"/>
+	
+	<int-http:outbound-gateway request-channel="httpOutbound" url="http://localhost:8080" 
+			http-method="GET" reply-channel="httpReply"/>
+			
+	<bean class="com.akhil.component.AppComponent" id="printer"/>
+	
+	<int:service-activator input-channel="httpReply" ref="printer" method="printConsole"/>
+			
+	<bean class="com.akhil.component.AppComponent" id="printer2"/>
+	
+	<int:service-activator input-channel="httpChannel" ref="printer2" method="print"/>
+	
+	<int-http:inbound-gateway request-channel="httpChannel" supported-methods="GET" path="/"/>
+	
+	
+	
+	
+
+	
+	
+	
+	
+</beans>
