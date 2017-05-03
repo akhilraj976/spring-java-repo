@@ -1,2 +1,2 @@
 # spring-java-repo
-Projects with Spring framework and Java 
+Projects with Spring EIP and Java 
